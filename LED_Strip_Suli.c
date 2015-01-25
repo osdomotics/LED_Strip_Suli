@@ -24,8 +24,11 @@
 
 #include "LED_Strip_Suli.h"
 
-IO_T *__pinClk;
-IO_T *__pinDta;
+static IO_T pinClk = 0;
+static IO_T pinDta = 0;
+
+IO_T *__pinClk = &pinClk;
+IO_T *__pinDta = &pinDta;
 
 static void led_strip_clk_rise()
 {
