@@ -27,10 +27,18 @@
 
 #include "Suli.h"
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 // user api
 void led_strip_begin();
 void led_strip_end();
 void led_strip_init(PIN_T clk, PIN_T dta);
 void led_strip_set_color(uint8 r, uint8 g, uint8 b);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif

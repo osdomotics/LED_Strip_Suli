@@ -37,8 +37,9 @@ static void led_strip_clk_rise()
 
 static void led_strip_32_zero()
 {
+    int i;
     suli_pin_write(__pinDta, HAL_PIN_LOW);
-    for(int i=0; i<32; i++)
+    for(i=0; i<32; i++)
     {
         led_strip_clk_rise();
     }
@@ -62,7 +63,8 @@ static uint8 led_strip_take_anticode(uint8 dta)
 
 static void led_strip_dta_send(uint32 dta)
 {
-    for(int i=0; i<32; i++)
+    int i;
+    for(i=0; i<32; i++)
     {
         if(!(dta & 0x80000000))
         {
