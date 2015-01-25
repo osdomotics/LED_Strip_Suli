@@ -27,6 +27,56 @@
 IO_T *__pinClk;
 IO_T *__pinDta;
 
+static void led_strip_clk_rise()
+{
+    suli_pin_write(__pinClk, HAL_PIN_LOW);
+    suli_delay_us(20);
+    suli_pin_write(__pinClk, HAL_PIN_HIGH);
+    suli_delay_us(20);
+}
+
+static void led_strip_32_zero()
+{
+    suli_pin_write(__pinDta, HAL_PIN_LOW);
+    for(int i=0; i<32; i++)
+    {
+        led_strip_clk_rise();
+    }
+}
+
+static uint8 led_strip_take_anticode(uint8 dta)
+{
+    uint8 tmp = 0;
+    if(!(dta & 0x80))
+    {
+        tmp |= 0x02; 
+    }
+    
+    if(!(dta & 0x40))
+    {
+        tmp |= 0x01;
+    }
+    
+    return tmp;
+}
+
+static void led_strip_dta_send(uint32 dta)
+{
+    for(int i=0; i<32; i++)
+    {
+        if(!(dta & 0x80000000))
+        {
+            suli_pin_write(__pinDta, HAL_PIN_HIGH);
+        }
+        else
+        {
+            suli_pin_write(__pinDta, HAL_PIN_LOW);
+        }
+        
+        dta <<= 0x01;
+        led_strip_clk_rise();
+    }
+}
 
 void led_strip_init(PIN_T clk, PIN_T dta)
 {
@@ -45,57 +95,6 @@ void led_strip_begin()
 void led_strip_end()
 {
     led_strip_32_zero();
-}
-
-void led_strip_clk_rise()
-{
-    suli_pin_write(__pinClk, HAL_PIN_LOW);
-    suli_delay_us(20);
-    suli_pin_write(__pinClk, HAL_PIN_HIGH);
-    suli_delay_us(20);
-}
-
-void led_strip_32_zero()
-{
-    suli_pin_write(__pinDta, HAL_PIN_LOW);
-    for(int i=0; i<32; i++)
-    {
-        led_strip_clk_rise();
-    }
-}
-
-uint8 led_strip_take_anticode(uint8 dta)
-{
-    uint8 tmp = 0;
-    if(!(dta & 0x80))
-    {
-        tmp |= 0x02; 
-    }
-    
-    if(!(dta & 0x40))
-    {
-        tmp |= 0x01;
-    }
-    
-    return tmp;
-}
-
-void led_strip_dta_send(uint32 dta)
-{
-    for(int i=0; i<32; i++)
-    {
-        if(!(dta & 0x80000000))
-        {
-            suli_pin_write(__pinDta, HAL_PIN_HIGH);
-        }
-        else
-        {
-            suli_pin_write(__pinDta, HAL_PIN_LOW);
-        }
-        
-        dta <<= 0x01;
-        led_strip_clk_rise();
-    }
 }
 
 void led_strip_set_color(uint8 r, uint8 g, uint8 b)

@@ -27,16 +27,10 @@
 
 #include "Suli.h"
 
-static void led_strip_clk_rise();
-static void led_strip_32_zero();
-static uint8 led_strip_take_anticode(uint8 dta);
-static void led_strip_dta_send(uint32 dta);
-
 // user api
 void led_strip_begin();
 void led_strip_end();
 void led_strip_init(PIN_T clk, PIN_T dta);
 void led_strip_set_color(uint8 r, uint8 g, uint8 b);
-
 
 #endif
