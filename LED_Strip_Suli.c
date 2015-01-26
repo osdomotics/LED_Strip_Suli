@@ -32,9 +32,14 @@ IO_T *__pinDta = &pinDta;
 
 static void led_strip_clk_rise()
 {
-    suli_pin_write(__pinClk, HAL_PIN_LOW);
-    suli_delay_us(20);
+    /* From datasheet:
+     * The ic will latch a bit of data when the rising edge of the clock
+     * coming, And the data should changed after the falling edge of the
+     * clock;
+     */
     suli_pin_write(__pinClk, HAL_PIN_HIGH);
+    suli_delay_us(20);
+    suli_pin_write(__pinClk, HAL_PIN_LOW);
     suli_delay_us(20);
 }
 
@@ -69,7 +74,7 @@ static void led_strip_dta_send(uint32 dta)
     int i;
     for(i=0; i<32; i++)
     {
-        if(!(dta & 0x80000000))
+        if (dta & 0x80000000)
         {
             suli_pin_write(__pinDta, HAL_PIN_HIGH);
         }
